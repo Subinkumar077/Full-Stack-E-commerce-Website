@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useRef } from "react";
 
 const NewArrivals = () => {
-  const scrollRef = useRef();
+  const scrollRef = useRef(null);
 
   const scrollLeft = () => {
     scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -125,12 +125,12 @@ const NewArrivals = () => {
             <img
               src={product.image[0]?.url}
               alt={product.image[0]?.altText || product.name}
-              className="w-full h-64 object-cover"
+              className="w-full h-64 rounded-lg object-cover"
             />
             <div
-              className="absolute bottom-0 left-0 right-0 h-20 
+              className="absolute bottom-0 left-0 right-0 h-20 text-white
                         bg-gradient-to-t from-black/60 to-transparent 
-                        backdrop-blur-sm pointer-events-none z-10"
+                        backdrop-blur-sm p-4 pointer-events-none z-10"
             >
               <Link to={`/product/${product._id}`} className="block">
                 <h4 className="font-medium">{product.name}</h4>
