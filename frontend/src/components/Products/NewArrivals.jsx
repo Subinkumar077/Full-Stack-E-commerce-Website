@@ -1,17 +1,11 @@
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const NewArrivals = () => {
   const scrollRef = useRef(null);
-
-  const scrollLeft = () => {
-    scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-  };
-
-  const scrollRight = () => {
-    scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-  };
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   const newArrivals = [
     {
@@ -86,6 +80,44 @@ const NewArrivals = () => {
     },
   ];
 
+  // scroll buttons update
+  const updateScrollButtons = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    setCanScrollLeft(container.scrollLeft > 0);
+    setCanScrollRight(
+      container.scrollLeft + container.clientWidth < container.scrollWidth
+    );
+
+    console.log({
+      scrollLeft: container.scrollLeft,
+      clientWidth: container.clientWidth,
+      scrollWidth: container.scrollWidth,
+    });
+  };
+
+  // scroll actions
+  const handleScrollLeft = () => {
+    scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  };
+
+  const handleScrollRight = () => {
+    scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (container) {
+      container.addEventListener("scroll", updateScrollButtons);
+      updateScrollButtons();
+    }
+    return () => {
+      if (container)
+        container.removeEventListener("scroll", updateScrollButtons);
+    };
+  }, []);
+
   return (
     <section>
       <div className="container mx-auto text-center mb-10 relative">
@@ -98,14 +130,16 @@ const NewArrivals = () => {
         {/* Scroll Buttons */}
         <div className="absolute right-4 top-0 flex gap-2">
           <button
-            onClick={scrollLeft}
-            className="p-2 rounded border bg-white text-black shadow"
+            onClick={handleScrollLeft}
+            disabled={!canScrollLeft}
+            className="p-2 rounded border bg-white text-black shadow disabled:opacity-50"
           >
             <FiChevronLeft className="text-2xl" />
           </button>
           <button
-            onClick={scrollRight}
-            className="p-2 rounded border bg-white text-black shadow"
+            onClick={handleScrollRight}
+            disabled={!canScrollRight}
+            className="p-2 rounded border bg-white text-black shadow disabled:opacity-50"
           >
             <FiChevronRight className="text-2xl" />
           </button>

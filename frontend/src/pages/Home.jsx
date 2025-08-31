@@ -7,6 +7,7 @@ const Home = () => {
       <Hero />
       <GenderCollectionSection />
       <NewArrivals />
+      {/* {Best Seller} */}
     </div>
   );
 };
